@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para el sistema nosotros no existimos — Cero Aporte Mag</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ============================================
+       REPORTAJE EPJA — Page-specific styles
+       ============================================ */
+
+    /* ---- HERO PORTADA ---- */
+    .reportaje-hero {
+      min-height: 80vh;
+      background: var(--black);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .reportaje-hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(26,24,23,0.35) 0%, rgba(26,24,23,0.95) 65%),
+        url('https://i.imgur.com/gxR5qHz.jpeg') center/cover no-repeat;
+    }
+    .reportaje-hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: var(--max-w);
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 5vw, 3rem);
+    }
+    .reportaje-rubric {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1.2rem;
+    }
+    .reportaje-headline {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 6vw, 5.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: var(--white);
+      max-width: 22ch;
+      margin-bottom: 1.5rem;
+    }
+    .reportaje-deck {
+      font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+      color: rgba(255,255,255,0.75);
+      max-width: 60ch;
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+    .reportaje-byline {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+    .reportaje-byline strong { color: var(--greige); }
+
+    /* ---- BODY LAYOUT ---- */
+    .reportaje-body {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 4rem clamp(1.5rem, 5vw, 3rem) 2rem;
+    }
+    .reportaje-body p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #2c2c2c;
+      margin-bottom: 1.4rem;
+    }
+    .reportaje-body h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--black);
+      margin: 3rem 0 1rem;
+      line-height: 1.15;
+    }
+    .reportaje-body h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--black);
+      margin: 2rem 0 0.75rem;
+    }
+
+    /* ---- STAT CARDS ---- */
+    .stat-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin: 3rem 0;
+      border: 2px solid var(--black);
+    }
+    .stat-card {
+      background: var(--white);
+      padding: 2.5rem 1.5rem 2rem;
+      text-align: center;
+      position: relative;
+      border-right: 2px solid var(--black);
+    }
+    .stat-card:last-child { border-right: none; }
+    .stat-card::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 5px;
+      background: var(--red);
+      position: absolute;
+      top: 0; left: 0;
+    }
+    .stat-card-num {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      color: var(--black);
+      line-height: 1;
+      display: block;
+    }
+    .stat-card-num span { color: var(--red); }
+    .stat-card-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 0.75rem;
+      display: block;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+    .stat-card-context {
+      font-size: 0.82rem;
+      color: #5a5a5a;
+      margin-top: 0.6rem;
+      line-height: 1.5;
+    }
+
+    /* ---- FLIP CARDS (Causas deserción) ---- */
+    .causes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+    .flip-card { height: 200px; }
+    .flip-card-front {
+      background: var(--cream);
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .flip-card-back {
+      background: var(--red);
+    }
+    .flip-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .flip-label {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--black);
+      text-align: center;
+      line-height: 1.25;
+    }
+    .flip-hint {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--greige);
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+    .flip-back-text {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.92);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* ---- CHART SECTION ---- */
+    .chart-section {
+      background: var(--black);
+      padding: 3rem clamp(1.5rem, 5vw, 3rem);
+      margin: 3rem 0;
+    }
+    .chart-header {
+      margin-bottom: 2rem;
+    }
+    .chart-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.03em;
+    }
+    .chart-subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .bar-chart { width: 100%; }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 4rem 1fr 5rem;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .bar-year {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.85);
+      text-align: right;
+    }
+    .bar-track {
+      height: 28px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+    .bar-fill {
+      height: 100%;
+      background: var(--red);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 1.2s var(--ease-out);
+    }
+    .bar-fill.accent { background: rgba(255,63,32,0.35); border-right: 2px solid var(--red); }
+    .bar-value {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.85);
+      white-space: nowrap;
+    }
+    .chart-legend {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .bar-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+    }
+    .legend-swatch {
+      width: 1rem;
+      height: 0.5rem;
+      border-radius: 1px;
+      flex-shrink: 0;
+    }
+
+    /* ---- WORDPLAY / TOOLTIPS ---- */
+    .wordplay-section {
+      background: var(--ink);
+      padding: 3rem clamp(1.5rem, 5vw, 3rem);
+      margin: 3rem 0;
+    }
+    .wordplay-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.04em;
+      line-height: 1.2;
+    }
+    .wordplay-title .w-highlight {
+      color: var(--red);
+      border-bottom: 2px solid var(--red);
+      cursor: help;
+      position: relative;
+    }
+    .w-tooltip {
+      display: none;
+      position: absolute;
+      bottom: 130%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 400;
+      line-height: 1.45;
+      padding: 0.75rem 1rem;
+      border-radius: 3px;
+      width: 240px;
+      text-align: left;
+      letter-spacing: 0;
+      z-index: 50;
+      pointer-events: none;
+    }
+    .w-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--black);
+    }
+    .wordplay-title .w-highlight:hover .w-tooltip { display: block; }
+    .wordplay-sub {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.55);
+      margin-top: 0.75rem;
+      font-family: var(--font-mono);
+      letter-spacing: 0.06em;
+    }
+
+    /* ---- BUDGET PROGRESS ---- */
+    .budget-section { margin: 3rem 0; }
+    .budget-item { margin-bottom: 2rem; }
+    .budget-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+    }
+    .budget-label {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--black);
+    }
+    .budget-val {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--red);
+    }
+    .budget-desc {
+      font-size: 0.8rem;
+      color: var(--greige);
+      margin-top: 0.3rem;
+    }
+
+    /* ---- TABS CAUSAS ---- */
+    .tabs-section { margin: 3rem 0; }
+    .tab-content p {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #3a3a3a;
+      margin-bottom: 1rem;
+    }
+    .tab-content ul {
+      padding-left: 1.2rem;
+    }
+    .tab-content li {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #3a3a3a;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ---- TESTIMONY SECTION ---- */
+    .testimony-section {
+      background: var(--cream);
+      border-left: 4px solid var(--red);
+      padding: 2rem 2.5rem;
+      margin: 3rem 0;
+    }
+    .testimony-name {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.6rem;
+    }
+    .testimony-quote {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 600;
+      color: var(--black);
+      line-height: 1.4;
+      font-style: italic;
+    }
+
+    /* ---- SECTION DIVIDER ---- */
+    .section-divider {
+      border: none;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      margin: 3rem 0;
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 900px) {
+      .stat-cards { grid-template-columns: 1fr; }
+      .causes-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .causes-grid { grid-template-columns: 1fr; }
+      .bar-row { grid-template-columns: 3rem 1fr 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVEGACIÓN -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">Cero Aporte<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="reportaje-epja.html">EPJA</a></li>
+    <li><a href="testimonios.html">Testimonios</a></li>
+    <li><a href="datos.html">Datos</a></li>
+    <li><a href="podcast.html">Podcast</a></li>
+    <li><a href="index.html#sobre">Sobre el Mag</a></li>
+  </ul>
+</nav>
+
+<!-- HERO REPORTAJE -->
+<section class="reportaje-hero">
+  <div class="reportaje-hero-bg"></div>
+  <div class="reportaje-hero-inner">
+    <p class="reportaje-rubric">Educación · Investigación · Agosto 2026</p>
+    <h1 class="reportaje-headline">"Para el sistema nosotros no existimos"</h1>
+    <p class="reportaje-deck">
+      Más de 18.000 adultos abandonaron la educación EPJA en tres años. Sin psicólogos, sin textos, sin transporte y con un Estado que recorta el único fondo diseñado para retenerlos, las escuelas nocturnas luchan solas por una segunda oportunidad.
+    </p>
+    <p class="reportaje-byline">Por <strong>Sebastián Acevedo, Romina Medina y Miguel Pino</strong> · Universidad Autónoma de Chile</p>
+  </div>
+</section>
+
+<!-- CUERPO DEL REPORTAJE -->
+<main class="reportaje-body">
+
+  <!-- INTRO -->
+  <p>
+    María Yesenia Acuña tiene 47 años y está feliz estudiando. Esa frase, que podría sonar trivial, esconde décadas de espera. Una enfermedad celíaca sin diagnóstico la sacó del colegio en los años noventa, cuando los hospitales "no tenían la tecnología para encontrarla". El matrimonio, los hijos, los quehaceres diarios hicieron el resto. Hoy, en la Escuela para Adultos Alberto Hurtado de Padre Hurtado, María está pensando en dar la prueba para la universidad. "Aunque sea por darla", dice con entusiasmo.
+  </p>
+  <p>
+    Lo que María relata es uno de los patrones que más se repiten entre quienes llegan a los CEIA o EPJA: personas que no decidieron abandonar el colegio por voluntad propia, sino que acumularon circunstancias que los dejaron fuera del sistema escolar. Y que ahora, con la voluntad que el Estado no acompaña, intentan volver.
+  </p>
+
+  <!-- STAT CARDS -->
+  <div class="stat-cards">
+    <div class="stat-card reveal">
+      <span class="stat-number stat-card-num" data-target="101325">0</span>
+      <span class="stat-card-label">Adultos matriculados en EPJA (2024)</span>
+      <p class="stat-card-context">El nivel más bajo de los últimos 9 años.</p>
+    </div>
+    <div class="stat-card reveal">
+      <span class="stat-number stat-card-num" data-target="18" data-suffix="K">0</span>
+      <span class="stat-card-label">Estudiantes perdidos desde el peak de 2021</span>
+      <p class="stat-card-context">Una caída sistemática que no se detiene.</p>
+    </div>
+    <div class="stat-card reveal">
+      <span class="stat-number stat-card-num" data-target="30" data-suffix="%">0</span>
+      <span class="stat-card-label">Recorte al Fondo de Reactivación 2026</span>
+      <p class="stat-card-context">De $8.505 a $5.618 millones en un solo año.</p>
+    </div>
+  </div>
+
+  <!-- PULL QUOTE 1 -->
+  <div class="pull-quote reveal">
+    <blockquote>"Antes estas salas tenían 35 a 40 alumnos todas las noches, hoy con suerte llegan 20."</blockquote>
+    <cite>Fabián Aguirre, Director Escuela Alberto Hurtado</cite>
+  </div>
+
+  <h2>Las causas del abandono: mucho más que una decisión</h2>
+
+  <p>
+    Para el profe "Pancho", como lo conocen sus estudiantes, la baja en las matrículas responde a una serie de factores que golpean especialmente a quienes estudian de noche. La inseguridad es uno de ellos: el temor a caminar solos por la noche hasta la escuela, ubicada a pocos metros de la plaza de Padre Hurtado, es real y cotidiano.
+  </p>
+  <p>
+    A eso se suma la inmediatez: muchos optan por rendir exámenes libres, una alternativa que parece más accesible pero que cierra puertas hacia la educación superior. "En el caso nuestro, la posibilidad de continuidad de estudio a nivel superior es viable", explica Aguirre, marcando la diferencia.
+  </p>
+
+  <!-- FLIP CARDS -->
+  <p class="eyebrow" style="margin-top:2rem;">Haz clic para conocer cada causa</p>
+  <div class="causes-grid">
+
+    <div class="flip-card reveal">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <div class="flip-icon">🌙</div>
+          <p class="flip-label">Inseguridad nocturna</p>
+          <p class="flip-hint">Toca para saber más</p>
+        </div>
+        <div class="flip-card-back">
+          <p class="flip-back-text">El temor a caminar solos de noche hace que muchos estudiantes no lleguen a clases. Las escuelas están a menudo en zonas de alta inseguridad.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card reveal">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <div class="flip-icon">⏱️</div>
+          <p class="flip-label">Falta de tiempo</p>
+          <p class="flip-hint">Toca para saber más</p>
+        </div>
+        <div class="flip-card-back">
+          <p class="flip-back-text">Turnos rotativos, trayectos largos y crianza hacen que la educación quede siempre en el último lugar de las prioridades.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card reveal">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <div class="flip-icon">💰</div>
+          <p class="flip-label">Precariedad económica</p>
+          <p class="flip-hint">Toca para saber más</p>
+        </div>
+        <div class="flip-card-back">
+          <p class="flip-back-text">Ingresos inestables y la necesidad de sostener el hogar no dejan margen para comprometer horarios con estudios nocturnos.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card reveal">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <div class="flip-icon">👶</div>
+          <p class="flip-label">Maternidad / paternidad</p>
+          <p class="flip-hint">Toca para saber más</p>
+        </div>
+        <div class="flip-card-back">
+          <p class="flip-back-text">"Hay muchos jóvenes que se convierten en padres de familia o provienen de contextos muy vulnerables", señala Francisco González, jefe de UTP.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card reveal">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <div class="flip-icon">📋</div>
+          <p class="flip-label">Exámenes libres</p>
+          <p class="flip-hint">Toca para saber más</p>
+        </div>
+        <div class="flip-card-back">
+          <p class="flip-back-text">Muchos eligen rendir exámenes libres por conveniencia, sin saber que esta opción cierra el acceso a la educación superior.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card reveal">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <div class="flip-icon">🏥</div>
+          <p class="flip-label">Salud y enfermedad</p>
+          <p class="flip-hint">Toca para saber más</p>
+        </div>
+        <div class="flip-card-back">
+          <p class="flip-back-text">Como María, muchos estudiantes abandonaron el sistema por enfermedades sin diagnóstico, accidentes u otras condiciones de salud.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GRÁFICO MATRÍCULA -->
+  <div class="chart-section" id="presupuesto">
+    <div class="chart-header">
+      <p class="chart-title">Matrícula EPJA 2016–2024</p>
+      <p class="chart-subtitle">Fuente: Mineduc — Datos en miles de estudiantes</p>
+    </div>
+    <div class="bar-chart" id="enrollmentChart">
+      <div class="bar-row">
+        <span class="bar-year">2016</span>
+        <div class="bar-track"><div class="bar-fill" data-width="82"></div></div>
+        <span class="bar-value">123.4K</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-year">2017</span>
+        <div class="bar-track"><div class="bar-fill" data-width="80"></div></div>
+        <span class="bar-value">120.1K</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-year">2018</span>
+        <div class="bar-track"><div class="bar-fill" data-width="78"></div></div>
+        <span class="bar-value">117.3K</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-year">2019</span>
+        <div class="bar-track"><div class="bar-fill" data-width="79"></div></div>
+        <span class="bar-value">118.9K</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-year">2020</span>
+        <div class="bar-track"><div class="bar-fill accent" data-width="60"></div></div>
+        <span class="bar-value">90.2K</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-year">2021</span>
+        <div class="bar-track"><div class="bar-fill" data-width="100"></div></div>
+        <span class="bar-value">119.8K</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-year">2022</span>
+        <div class="bar-track"><div class="bar-fill" data-width="90"></div></div>
+        <span class="bar-value">113.2K</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-year">2023</span>
+        <div class="bar-track"><div class="bar-fill" data-width="77"></div></div>
+        <span class="bar-value">107.4K</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-year">2024</span>
+        <div class="bar-track"><div class="bar-fill accent" data-width="68"></div></div>
+        <span class="bar-value">101.3K</span>
+      </div>
+    </div>
+    <div class="chart-legend">
+      <span class="bar-legend-item"><span class="legend-swatch" style="background:var(--red);"></span>Matrícula normal</span>
+      <span class="bar-legend-item"><span class="legend-swatch" style="background:rgba(255,63,32,0.45);"></span>Año crítico</span>
+    </div>
+  </div>
+
+  <!-- WORDPLAY SECTION -->
+  <div class="wordplay-section reveal">
+    <p class="wordplay-title">
+      Las escuelas nocturnas no tienen
+      <span class="w-highlight">Ley SEP<span class="w-tooltip">Subvención Escolar Preferencial: beneficio estatal para escuelas con alta proporción de alumnos vulnerables. Las EPJA no pueden acceder a ella.</span></span>,
+      no tienen
+      <span class="w-highlight">Pro-Retención<span class="w-tooltip">Programa que entrega fondos para retener a estudiantes en riesgo de abandono. Sus restricciones lo hacen inaplicable en la modalidad nocturna.</span></span>
+      y no tienen
+      <span class="w-highlight">psicólogos<span class="w-tooltip">Ninguna de las escuelas nocturnas consultadas para este reportaje cuenta con psicólogo ni asistente social, pese a atender a estudiantes en situación de vulnerabilidad.</span></span>.
+    </p>
+    <p class="wordplay-sub">Pasa el cursor sobre los términos para entender qué significan y por qué importan.</p>
+  </div>
+
+  <h2>Un Estado desconectado</h2>
+
+  <p>
+    "Nosotros por parte del gobierno solo recibimos la plata por alumno matriculado", afirma el director Fabián Aguirre. El establecimiento no puede acceder a la Ley SEP —que va en apoyo de comunidades con estudiantes vulnerables— porque no cuenta con recursos para ejecutar el Plan de Mejoramiento Ejecutivo. Tampoco puede acceder al programa Pro-Retención, que entrega aportes para cubrir transporte, materiales y otras necesidades básicas. "Esos programas se aplican solo en la educación diurna", señala González.
+  </p>
+  <p>
+    Este año, el establecimiento fue invitado a participar en el programa Pro-Retención, pero con fondos que no pueden destinarse a transporte. "No podemos contratar un furgón para ir en apoyo de estudiantes de las zonas más rurales. Nos dijeron que no se podía. Tiene que ser con elementos como zapatos, entendiendo que acá en la nocturna no usan zapatos de colegio", relata Aguirre.
+  </p>
+
+  <!-- TESTIMONY -->
+  <div class="testimony-section reveal" id="maria">
+    <p class="testimony-name">María Yesenia Acuña · 47 años · Estudiante EPJA</p>
+    <p class="testimony-quote">"Esto me ha generado tener más personalidad. Antes era como vergonzosa. Esto mismo que estoy haciendo ahora yo no me atrevía y ahora ya estoy diciendo que sí."</p>
+  </div>
+
+  <!-- BUDGET BARS -->
+  <h2>El fondo que se desinfla</h2>
+  <p>
+    El Plan de Reactivación Educativa nació en 2023 como respuesta urgente para retomar el proceso escolar tras la pandemia. Desde entonces, ha sufrido recorte tras recorte.
+  </p>
+
+  <div class="budget-section">
+    <div class="budget-item reveal">
+      <div class="budget-header">
+        <span class="budget-label">Presupuesto inicial 2023</span>
+        <span class="budget-val">$9.567 M</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" data-width="100"></div></div>
+      <p class="budget-desc">Lanzamiento del Plan de Reactivación Educativa junto al Presidente Gabriel Boric.</p>
+    </div>
+    <div class="budget-item reveal">
+      <div class="budget-header">
+        <span class="budget-label">Presupuesto 2024</span>
+        <span class="budget-val">$8.505 M</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" data-width="89"></div></div>
+      <p class="budget-desc">Primer recorte presupuestario, apenas un año después del lanzamiento.</p>
+    </div>
+    <div class="budget-item reveal">
+      <div class="budget-header">
+        <span class="budget-label">Presupuesto 2025</span>
+        <span class="budget-val">$7.200 M</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" data-width="75"></div></div>
+      <p class="budget-desc">El fondo fue víctima de la "podadora" en el proceso presupuestario.</p>
+    </div>
+    <div class="budget-item reveal">
+      <div class="budget-header">
+        <span class="budget-label">Presupuesto 2026</span>
+        <span class="budget-val">$5.618 M</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" data-width="58"></div></div>
+      <p class="budget-desc">Recorte superior al 30% en un año. Plan de ajuste del gasto fiscal del gobierno Kast.</p>
+    </div>
+  </div>
+
+  <!-- TABS CAUSAS -->
+  <h2>¿Por qué el Estado no llega?</h2>
+  <p>Las razones son múltiples y se acumulan hace décadas. Aquí las organizamos en tres dimensiones:</p>
+
+  <div class="tabs-section">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this, 'tab-normativa')">Normativa</button>
+      <button class="tab-btn" onclick="switchTab(this, 'tab-presupuesto')">Presupuesto</button>
+      <button class="tab-btn" onclick="switchTab(this, 'tab-cultura')">Cultural</button>
+    </div>
+    <div id="tab-normativa" class="tab-panel active tab-content">
+      <p>Las normas que regulan la educación básica y media no se diseñaron pensando en adultos que trabajan de noche. La Ley SEP, el Pro-Retención y otros programas tienen restricciones explícitas que excluyen a la modalidad nocturna.</p>
+      <ul>
+        <li>La Ley SEP no aplica a CEIA ni EPJA por no cumplir requisitos de planificación.</li>
+        <li>Los textos escolares del Mineduc no llegan desde hace al menos un año.</li>
+        <li>El Pro-Retención prohíbe usar fondos en transporte, la necesidad más urgente.</li>
+      </ul>
+    </div>
+    <div id="tab-presupuesto" class="tab-panel tab-content">
+      <p>El único fondo diseñado específicamente para la reinserción escolar —el Plan de Reactivación Educativa— lleva tres años de recortes consecutivos. De $9.567 millones en 2023 a $5.618 millones en 2026.</p>
+      <ul>
+        <li>Las escuelas solo reciben subvención por alumno matriculado.</li>
+        <li>Sin fondos para psicólogos, asistentes sociales ni transporte.</li>
+        <li>El presupuesto de educación de adultos representa una fracción mínima del total educacional.</li>
+      </ul>
+    </div>
+    <div id="tab-cultura" class="tab-panel tab-content">
+      <p>"Seguimos siendo el patito feo de la educación. Para el ministerio nosotros no existimos", dice el director Aguirre, que trabaja en formación de jóvenes y adultos desde 2001. La falta de interés, afirma, trasciende a los gobiernos de turno.</p>
+      <ul>
+        <li>Ningún gobierno ha priorizado la educación de jóvenes y adultos desde los años 2000.</li>
+        <li>La discusión pública se centra en educación superior y educación municipal diurna.</li>
+        <li>La Subsecretaría no respondió solicitudes de entrevista para este reportaje.</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- TIMELINE -->
+  <h2>Una deuda que viene de lejos</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-year">2001</p>
+      <p class="timeline-text">Recursos para formación técnico-profesional</p>
+      <p class="timeline-desc">Los CEIA recibían fondos especiales para ofrecer formación técnica. Fue la última vez que el Estado invirtió en esta modalidad de manera significativa.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-year">2020</p>
+      <p class="timeline-text">Pandemia: caída drástica</p>
+      <p class="timeline-desc">La matrícula EPJA cae de 118.900 a 90.200 estudiantes. Las clases online evidencian la brecha digital: "Todos tienen celular, pero eso está asociado a un plan".</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-year">2021</p>
+      <p class="timeline-text">Recuperación parcial: peak de 119.800</p>
+      <p class="timeline-desc">El regreso a clases presenciales trae de vuelta a muchos estudiantes. Pero la recuperación dura poco.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-year">2023</p>
+      <p class="timeline-text">Plan de Reactivación Educativa</p>
+      <p class="timeline-desc">Lanzado con $9.567 millones como respuesta a la crisis post-pandemia. Promete ser una señal de urgencia. En la práctica, llega con restricciones que lo hacen difícil de aplicar.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-year">2024</p>
+      <p class="timeline-text">Mínimo histórico: 101.325 estudiantes</p>
+      <p class="timeline-desc">La matrícula EPJA llega a su punto más bajo en nueve años. El fondo de reactivación ya lleva su primer recorte.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-year">2026</p>
+      <p class="timeline-text">Recorte del 30% al único fondo de apoyo</p>
+      <p class="timeline-desc">De $8.505 a $5.618 millones. El plan de ajuste fiscal golpea directamente al único programa diseñado para recuperar a los desertores.</p>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- CIERRE -->
+  <h2>La promesa rota</h2>
+
+  <p>
+    La Fundación Súmate del Hogar de Cristo trabaja con cerca de mil estudiantes de 18 a 24 años que necesitan reinsertarse en el sistema escolar. Solo el 30% de sus ingresos proviene del Estado. "El Estado desprioriza e invisibiliza la educación de adultos", afirma Alicia Cárdenas, jefa de alianzas e incidencia.
+  </p>
+  <p>
+    Si bien Chile destina un presupuesto total de $16,5 billones de pesos al área de educación, de los cuales $12.175 millones están asignados a la educación y reinserción de personas adultas, directivos, docentes y miembros de las escuelas consultadas coinciden en un punto: la educación de adultos sigue marcada por el abandono.
+  </p>
+
+  <div class="pull-quote reveal">
+    <blockquote>"Nunca es tarde. Yo tengo 47 años y estoy feliz aquí estudiando. Ahora estoy pensando en dar la prueba para la universidad. Aunque sea por darla."</blockquote>
+    <cite>María Yesenia Acuña · Estudiante, Escuela Alberto Hurtado</cite>
+  </div>
+
+  <p>
+    Detrás de esa frase hay años de esfuerzo propio, de malabarismos con horarios, de una hija de 7 años esperando en casa y de una familia que decidió acompañarla. Lo que no hay detrás es un Estado que haya puesto algo de su parte para que ese camino fuera más fácil.
+  </p>
+  <p>
+    La interrogante que este reportaje deja abierta es si Chile estará dispuesto a prevenir que las salas en las que personas como María Yesenia encontraron una segunda oportunidad queden vacías. Antes de que ese espacio donde un adulto puede reencontrarse consigo mismo, recuperar la confianza y saldar una deuda pendiente de décadas, deje de estar disponible para quien lo necesite.
+  </p>
+
+  <p style="font-size:0.8rem;color:var(--greige);margin-top:3rem;font-family:var(--font-mono);letter-spacing:0.04em;">
+    Hasta el cierre de este reportaje, la Subsecretaría de Educación y miembros de la Comisión de Educación no respondieron nuestras solicitudes de entrevista.
+  </p>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Cero Aporte<span>.</span></div>
+      <p class="footer-copy">© 2026 Cero Aporte Mag · Escuela de Periodismo, UAC · Todos los derechos reservados</p>
+    </div>
+    <nav class="footer-nav">
+      <a href="reportaje-epja.html">EPJA</a>
+      <a href="testimonios.html">Testimonios</a>
+      <a href="datos.html">Datos</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="index.html#sobre">Sobre</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+  // Tabs switcher for this page
+  function switchTab(btn, panelId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(panelId).classList.add('active');
+  }
+
+  // Animate bar chart on scroll
+  (function() {
+    const fills = document.querySelectorAll('.bar-fill[data-width]');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.width = e.target.dataset.width + '%';
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    fills.forEach(f => obs.observe(f));
+  })();
+</script>
+</body>
+</html>

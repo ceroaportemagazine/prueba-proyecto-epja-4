@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testimonios — Cero Aporte Mag</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ---- HERO ---- */
+    .rep-hero {
+      min-height: 70vh;
+      background: var(--black);
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 4rem;
+      padding-top: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .rep-hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(26,24,23,0.4) 0%, rgba(26,24,23,0.95) 65%),
+        url('https://i.imgur.com/FJYBVjM.jpeg') center 40%/cover no-repeat;
+    }
+    .rep-hero-inner { position: relative; z-index: 2; max-width: 800px; }
+    .rep-hero-category {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .rep-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5.5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: var(--white);
+      margin-bottom: 1.2rem;
+    }
+    .rep-hero-title em { color: var(--red); font-style: normal; }
+    .rep-hero-deck {
+      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+      color: rgba(255,255,255,0.72);
+      line-height: 1.65;
+      max-width: 58ch;
+    }
+
+    /* ---- LAYOUT ---- */
+    .article-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 4rem clamp(1.5rem, 5vw, 3rem) 0;
+    }
+    .article-wrap p {
+      font-size: 1.05rem;
+      line-height: 1.82;
+      color: #2e2e2e;
+      margin-bottom: 1.4rem;
+      font-weight: 300;
+    }
+    .article-wrap h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      color: var(--black);
+      margin: 3rem 0 1rem;
+      padding-top: 1rem;
+      border-top: 2px solid rgba(0,0,0,0.08);
+    }
+
+    /* ---- TIMELINE DE VIDA ---- */
+    .vida-timeline {
+      margin: 3rem 0;
+      position: relative;
+    }
+    .vida-intro {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 2rem;
+    }
+    .vida-track {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--red) rgba(0,0,0,0.08);
+    }
+    .vida-track::-webkit-scrollbar { height: 4px; }
+    .vida-track::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
+    .vida-step {
+      flex: 0 0 200px;
+      position: relative;
+      cursor: pointer;
+    }
+    .vida-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 1.1rem;
+      right: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, var(--red), var(--greige));
+      z-index: 0;
+    }
+    .vida-dot-wrap {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    .vida-dot {
+      width: 1.4rem;
+      height: 1.4rem;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 3px solid var(--greige);
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+    .vida-step.active .vida-dot,
+    .vida-step:hover .vida-dot {
+      background: var(--red);
+      border-color: var(--red);
+      box-shadow: 0 0 0 4px rgba(255,63,32,0.2);
+    }
+    .vida-age {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--greige);
+      text-transform: uppercase;
+      padding-right: 1rem;
+    }
+    .vida-step.active .vida-age { color: var(--red); }
+    .vida-label {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--black);
+      padding-right: 1rem;
+      line-height: 1.3;
+    }
+    .vida-detail {
+      font-size: 0.78rem;
+      color: #5a5a5a;
+      line-height: 1.5;
+      padding-right: 1rem;
+      margin-top: 0.3rem;
+    }
+    /* Panel de detalle */
+    .vida-panel {
+      margin-top: 2rem;
+      background: var(--black);
+      color: var(--white);
+      padding: 2rem;
+      min-height: 120px;
+      display: none;
+      animation: fadeSlide 0.3s var(--ease-out);
+    }
+    .vida-panel.active { display: block; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .vida-panel-age {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.5rem;
+    }
+    .vida-panel-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .vida-panel-text {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.65;
+    }
+
+    /* ---- VOCES: TARJETAS DE TESTIMONIO ---- */
+    .voces-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2.5rem 0;
+    }
+    .voz-card {
+      background: var(--cream);
+      border: 1px solid rgba(0,0,0,0.08);
+      padding: 2rem;
+      position: relative;
+      cursor: pointer;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .voz-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .voz-card::before {
+      content: '"';
+      position: absolute;
+      top: 1rem; right: 1.2rem;
+      font-family: var(--font-display);
+      font-size: 4rem;
+      color: var(--red);
+      opacity: 0.2;
+      line-height: 1;
+    }
+    .voz-quote {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--black);
+      font-style: italic;
+      margin-bottom: 1.2rem;
+    }
+    .voz-name {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--black);
+    }
+    .voz-role {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-top: 0.2rem;
+    }
+    /* Expanded state */
+    .voz-expanded {
+      display: none;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #4a4a4a;
+      line-height: 1.65;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      padding-top: 1rem;
+    }
+    .voz-card.open .voz-expanded { display: block; }
+    .voz-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+      cursor: pointer;
+    }
+    .voz-toggle-icon { transition: transform 0.3s; }
+    .voz-card.open .voz-toggle-icon { transform: rotate(45deg); }
+
+    /* ---- CIERRE ---- */
+    .closing-strip {
+      background: var(--black);
+      padding: 5rem clamp(1.5rem, 5vw, 3rem);
+      text-align: center;
+      margin-top: 6rem;
+    }
+    .closing-strip p {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      color: var(--white);
+      max-width: 24ch;
+      margin: 0 auto 2rem;
+    }
+    .closing-strip p em { color: var(--red); font-style: normal; }
+
+    @media (max-width: 680px) {
+      .voces-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">Cero Aporte<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Portada</a></li>
+    <li><a href="reportaje-epja.html">EPJA</a></li>
+    <li><a href="testimonios.html" style="color:var(--white);">Testimonios</a></li>
+    <li><a href="datos.html">Datos</a></li>
+    <li><a href="podcast.html">Podcast</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="rep-hero">
+  <div class="rep-hero-bg"></div>
+  <div class="rep-hero-inner container">
+    <span class="rep-hero-category">Documental interactivo</span>
+    <h1 class="rep-hero-title">Mi segunda oportunidad:<br><em>Voces desde el pupitre adulto</em></h1>
+    <p class="rep-hero-deck">A través de la historia de María, exploramos el lado humano de quienes deciden que nunca es tarde para aprender.</p>
+  </div>
+</section>
+
+<!-- CUERPO -->
+<main class="article-wrap">
+
+  <p class="reveal">María tiene 45 años y sus manos reflejan décadas de trabajo. Cuando tenía 14, el sistema la dejó atrás. Hoy, con sus hijos ya grandes, decidió volver a un aula que le resulta tan ajena como esperanzadora. Como ella, miles de adultos en Chile buscan saldar una deuda histórica consigo mismos.</p>
+
+  <p class="reveal">Este espacio está dedicado a sus voces. Explora la línea de vida interactiva que refleja el trayecto típico de deserción y retorno escolar en nuestro país, y conoce más testimonios haciendo clic en cada tarjeta.</p>
+
+  <!-- LÍNEA DE VIDA INTERACTIVA -->
+  <h2 class="reveal">Línea de Vida: El camino de María</h2>
+
+  <div class="vida-timeline reveal">
+    <p class="vida-intro">★ Haz clic en cada etapa para conocer más</p>
+    <div class="vida-track">
+
+      <div class="vida-step active" onclick="activarVida(0)">
+        <div class="vida-dot-wrap"><div class="vida-dot"></div></div>
+        <p class="vida-age">14 años</p>
+        <p class="vida-label">Abandono escolar</p>
+        <p class="vida-detail">El sistema la dejó atrás</p>
+      </div>
+
+      <div class="vida-step" onclick="activarVida(1)">
+        <div class="vida-dot-wrap"><div class="vida-dot"></div></div>
+        <p class="vida-age">20 años</p>
+        <p class="vida-label">Trabajo y maternidad</p>
+        <p class="vida-detail">Prioridades que se imponen</p>
+      </div>
+
+      <div class="vida-step" onclick="activarVida(2)">
+        <div class="vida-dot-wrap"><div class="vida-dot"></div></div>
+        <p class="vida-age">35 años</p>
+        <p class="vida-label">El primer intento</p>
+        <p class="vida-detail">Matricularse y no poder seguir</p>
+      </div>
+
+      <div class="vida-step" onclick="activarVida(3)">
+        <div class="vida-dot-wrap"><div class="vida-dot"></div></div>
+        <p class="vida-age">45 años</p>
+        <p class="vida-label">El regreso definitivo</p>
+        <p class="vida-detail">La decisión que cambió todo</p>
+      </div>
+
+      <div class="vida-step" onclick="activarVida(4)">
+        <div class="vida-dot-wrap"><div class="vida-dot"></div></div>
+        <p class="vida-age">Hoy</p>
+        <p class="vida-label">Cuarto medio</p>
+        <p class="vida-detail">Y pensando en la universidad</p>
+      </div>
+
+    </div>
+
+    <div class="vida-panel active" id="vida-0">
+      <p class="vida-panel-age">14 años — Abandono</p>
+      <p class="vida-panel-title">Cuando el sistema te cierra la puerta</p>
+      <p class="vida-panel-text">María cursaba primero medio cuando su familia enfrentó una crisis económica. No era flojera ni desinterés: era la diferencia entre comer o estudiar. Como ella, más de 1,5 millones de adultos en Chile no terminaron su enseñanza media. Muchos tenían menos de 20 años cuando abandonaron.</p>
+    </div>
+    <div class="vida-panel" id="vida-1">
+      <p class="vida-panel-age">20 años — Trabajo y maternidad</p>
+      <p class="vida-panel-title">La vida que no da espera</p>
+      <p class="vida-panel-text">Con un hijo recién nacido y un trabajo de turno rotativo, retomar el colegio se volvió una imposibilidad práctica. Los horarios nocturnos del CEIA chocaban con los turnos. El transporte era un problema. Y la culpa de "abandonar" a los hijos por ir a estudiar, otra barrera invisible.</p>
+    </div>
+    <div class="vida-panel" id="vida-2">
+      <p class="vida-panel-age">35 años — El primer intento</p>
+      <p class="vida-panel-title">Volver y no poder quedarse</p>
+      <p class="vida-panel-text">Se matriculó en un CEIA de su comuna. Asistió las primeras semanas. Pero la cadena de obstáculos volvió a romperse: un problema de salud, una cuenta sin pagar, un familiar que cuidar. Sin apoyo institucional, sin psicólogo que la contuviera, el sistema la soltó de nuevo.</p>
+    </div>
+    <div class="vida-panel" id="vida-3">
+      <p class="vida-panel-age">45 años — El regreso definitivo</p>
+      <p class="vida-panel-title">"Esta vez no me voy a ir"</p>
+      <p class="vida-panel-text">Sus hijos ya grandes la alentaron. Llegó a la Escuela Alberto Hurtado sintiéndose "vieja y tonta". En dos semanas ya era parte del curso. Los profesores como Ariel San Martín hacen exactamente ese trabajo: devolver la confianza que el sistema les quitó hace décadas.</p>
+    </div>
+    <div class="vida-panel" id="vida-4">
+      <p class="vida-panel-age">Hoy — Cuarto medio</p>
+      <p class="vida-panel-title">"Ahora estoy pensando en dar la PSU"</p>
+      <p class="vida-panel-text">"Nunca es tarde. Yo tengo 47 años y estoy feliz aquí estudiando. Ahora estoy pensando en dar la prueba para la universidad. Aunque sea por darla." El Estado no puso nada de su parte para que ese camino fuera más fácil. Ella llegó sola, y llegó.</p>
+    </div>
+  </div>
+
+  <!-- VOCES DESDE EL PUPITRE -->
+  <h2 class="reveal">Más voces desde el pupitre adulto</h2>
+  <p class="reveal">Haz clic en cada tarjeta para leer el testimonio completo.</p>
+
+  <div class="voces-grid">
+
+    <div class="voz-card reveal" onclick="toggleVoz(this)">
+      <p class="voz-quote">"Para el sistema nosotros no existimos. Seguimos siendo el patito feo de la educación."</p>
+      <p class="voz-name">Fabián Aguirre</p>
+      <p class="voz-role">Director — Escuela Alberto Hurtado</p>
+      <div class="voz-expanded">
+        Aguirre lleva desde 2001 en el sistema de educación de adultos. Ha visto pasar gobiernos de todos los colores sin que ninguno haya priorizado el EPJA. "El gobierno que sea nunca ha estado interesado por la educación de jóvenes y adultos", dice con una mezcla de cansancio y convicción. En su mejor época, la escuela tenía 300 matriculados. Hoy tiene 173. Y sigue ahí.
+      </div>
+      <span class="voz-toggle"><span class="voz-toggle-icon">+</span> Leer más</span>
+    </div>
+
+    <div class="voz-card reveal" onclick="toggleVoz(this)">
+      <p class="voz-quote">"El reingreso exige un trabajo profundo para devolverles la autoconfianza que el sistema les quitó."</p>
+      <p class="voz-name">Ariel San Martín</p>
+      <p class="voz-role">Profesor de Matemáticas — 34 años en EPJA</p>
+      <div class="voz-expanded">
+        San Martín recuerda a una alumna que perdió la vista a los 30 años. Ingresó a la escuela igualmente. Con su celular como única herramienta, grabó cada clase durante la pandemia y obtuvo su cuarto medio. Hoy trabaja en una radio en Peñaflor. "Ese tipo de resiliencia no la forma el Estado. La forma la persona, sola, frente a un sistema que no la ve."
+      </div>
+      <span class="voz-toggle"><span class="voz-toggle-icon">+</span> Leer más</span>
+    </div>
+
+    <div class="voz-card reveal" onclick="toggleVoz(this)">
+      <p class="voz-quote">"¿Tú caminarías solo desde la plaza hasta acá de noche? No, ¿cierto?"</p>
+      <p class="voz-name">Francisco González</p>
+      <p class="voz-role">Jefe de UTP — Profesor de Lenguaje</p>
+      <div class="voz-expanded">
+        "Pancho" González conoce de cerca la inseguridad como barrera. Sus estudiantes recorren calles oscuras para llegar a una escuela a metros de la plaza de Padre Hurtado, una zona donde el miedo ya es cotidiano. No hay transporte disponible porque el programa Pro-Retención no lo permite. Los estudiantes deben elegir entre su seguridad y su educación.
+      </div>
+      <span class="voz-toggle"><span class="voz-toggle-icon">+</span> Leer más</span>
+    </div>
+
+    <div class="voz-card reveal" onclick="toggleVoz(this)">
+      <p class="voz-quote">"El Estado desprioriza e invisibiliza la educación de adultos. Y los números lo confirman."</p>
+      <p class="voz-name">Alicia Cárdenas</p>
+      <p class="voz-role">Jefa de alianzas — Fundación Súmate, Hogar de Cristo</p>
+      <div class="voz-expanded">
+        La Fundación Súmate trabaja con cerca de mil estudiantes de 18 a 24 años que necesitan reinsertarse. Solo el 30% de sus ingresos viene del Estado, vía subvención por alumno. El resto lo consiguen por sus propios medios. "Las discusiones políticas sobre educación se centran en la superior o la municipal. La educación de adultos no existe en ese debate", lamenta Cárdenas.
+      </div>
+      <span class="voz-toggle"><span class="voz-toggle-icon">+</span> Leer más</span>
+    </div>
+
+  </div>
+
+  <!-- PULL QUOTE CIERRE -->
+  <div class="pull-quote reveal">
+    <blockquote>"Esto me ha generado tener más personalidad. Antes era como vergonzosa. Esto mismo que estoy haciendo ahora yo no me atrevía — y ahora ya estoy diciendo que sí."</blockquote>
+    <cite>María Yesenia Acuña — Estudiante, 47 años</cite>
+  </div>
+
+</main>
+
+<!-- CIERRE -->
+<div class="closing-strip">
+  <p>Detrás de cada cifra hay una historia de <em>valentía</em> que el Estado decidió no ver.</p>
+  <a href="datos.html" class="btn btn-red">Ver los datos →</a>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Cero Aporte<span>.</span></div>
+      <p class="footer-copy">© 2026 Cero Aporte Mag · Escuela de Periodismo, UAC</p>
+    </div>
+    <nav class="footer-nav">
+      <a href="index.html">Portada</a>
+      <a href="reportaje-epja.html">EPJA</a>
+      <a href="datos.html">Datos</a>
+      <a href="podcast.html">Podcast</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+  function activarVida(idx) {
+    document.querySelectorAll('.vida-step').forEach((s, i) => {
+      s.classList.toggle('active', i === idx);
+    });
+    document.querySelectorAll('.vida-panel').forEach((p, i) => {
+      p.classList.toggle('active', i === idx);
+    });
+  }
+
+  function toggleVoz(card) {
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.voz-card').forEach(c => c.classList.remove('open'));
+    if (!isOpen) card.classList.add('open');
+  }
+</script>
+</body>
+</html>

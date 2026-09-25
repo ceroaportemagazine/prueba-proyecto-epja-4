@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Podcast — Cero Aporte Mag</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ---- HERO ---- */
+    .rep-hero {
+      min-height: 60vh;
+      background: var(--black);
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 4rem;
+      padding-top: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .rep-hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(26,24,23,0.5) 0%, rgba(26,24,23,0.97) 65%),
+        url('https://i.imgur.com/2T3omiF.jpeg') center/cover no-repeat;
+    }
+    .rep-hero-inner { position: relative; z-index: 2; max-width: 800px; }
+    .rep-hero-category {
+      display: inline-flex;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .rep-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5.5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: var(--white);
+      margin-bottom: 1.2rem;
+    }
+    .rep-hero-title em { color: var(--red); font-style: normal; }
+    .rep-hero-deck {
+      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+      color: rgba(255,255,255,0.72);
+      line-height: 1.65;
+      max-width: 58ch;
+    }
+
+    /* ---- LAYOUT ---- */
+    .article-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 4rem clamp(1.5rem, 5vw, 3rem) 0;
+    }
+    .article-wrap p {
+      font-size: 1.05rem;
+      line-height: 1.82;
+      color: #2e2e2e;
+      margin-bottom: 1.4rem;
+      font-weight: 300;
+    }
+    .article-wrap h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--black);
+      margin: 3rem 0 0.75rem;
+      padding-top: 1rem;
+      border-top: 2px solid rgba(0,0,0,0.08);
+    }
+
+    /* ---- PLAYER ---- */
+    .player-card {
+      background: var(--black);
+      padding: 2.5rem;
+      margin: 2.5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .player-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: var(--red);
+    }
+    .player-ep {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.5rem;
+    }
+    .player-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .player-subtitle {
+      font-size: 0.85rem;
+      color: var(--greige);
+      margin-bottom: 2rem;
+    }
+    /* Controles */
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .player-btn {
+      background: none;
+      border: none;
+      color: var(--white);
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s, transform 0.15s;
+    }
+    .player-btn:hover { color: var(--red); transform: scale(1.1); }
+    .player-btn-play {
+      width: 3rem; height: 3rem;
+      border-radius: 50%;
+      background: var(--red);
+      color: var(--white);
+    }
+    .player-btn-play:hover { background: #e5361a; transform: scale(1.05); }
+    .player-btn svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
+    .player-btn-play svg { width: 1rem; height: 1rem; fill: white; margin-left: 2px; }
+    /* Barra de progreso */
+    .player-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .player-time {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--greige);
+      white-space: nowrap;
+      min-width: 3rem;
+    }
+    .player-bar {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+    }
+    .player-bar-fill {
+      height: 100%;
+      background: var(--red);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.5s linear;
+      position: relative;
+    }
+    .player-bar-fill::after {
+      content: '';
+      position: absolute;
+      right: -5px; top: 50%;
+      transform: translateY(-50%);
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--white);
+    }
+    /* Episodios lista */
+    .ep-list { margin: 2rem 0; }
+    .ep-item {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1.2rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .ep-item:hover { background: rgba(255,63,32,0.04); }
+    .ep-num {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--greige);
+      min-width: 2rem;
+    }
+    .ep-info { flex: 1; }
+    .ep-title {
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 0.2rem;
+    }
+    .ep-desc {
+      font-size: 0.78rem;
+      color: #888;
+      line-height: 1.45;
+    }
+    .ep-dur {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--greige);
+      white-space: nowrap;
+    }
+    .ep-play-btn {
+      background: none;
+      border: none;
+      color: var(--greige);
+      cursor: pointer;
+      transition: color 0.2s;
+      padding: 0.3rem;
+    }
+    .ep-play-btn:hover { color: var(--red); }
+    .ep-play-btn svg { width: 1.4rem; height: 1.4rem; fill: currentColor; }
+
+    /* ---- GLOSARIO INTERACTIVO ---- */
+    .glosario-intro {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1.5rem;
+    }
+    .glosario-text {
+      font-size: 1.05rem;
+      line-height: 1.82;
+      color: #2e2e2e;
+      margin-bottom: 1.5rem;
+      font-weight: 300;
+    }
+    .gterm {
+      cursor: pointer;
+      border-bottom: 2px solid var(--red);
+      color: var(--black);
+      font-weight: 500;
+      transition: background 0.2s;
+      padding: 0 2px;
+    }
+    .gterm:hover, .gterm.active { background: rgba(255,63,32,0.12); }
+    .glosario-panel {
+      background: var(--black);
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      margin-top: 1.5rem;
+      display: none;
+      animation: fadeSlide 0.3s var(--ease-out);
+    }
+    .glosario-panel.active { display: block; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .glosario-panel-term {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--red);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .glosario-panel-def {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.65;
+    }
+    .glosario-panel-context {
+      margin-top: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--greige);
+      text-transform: uppercase;
+    }
+    .glosario-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .glosario-chip {
+      background: var(--cream);
+      border: 1px solid rgba(0,0,0,0.1);
+      padding: 0.6rem 1rem;
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .glosario-chip:hover, .glosario-chip.active {
+      background: var(--red);
+      color: var(--white);
+      border-color: var(--red);
+    }
+
+    /* ---- CIERRE ---- */
+    .closing-strip {
+      background: var(--black);
+      padding: 5rem clamp(1.5rem, 5vw, 3rem);
+      text-align: center;
+      margin-top: 6rem;
+    }
+    .closing-strip p {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      color: var(--white);
+      max-width: 24ch;
+      margin: 0 auto 2rem;
+    }
+    .closing-strip p em { color: var(--red); font-style: normal; }
+
+    @media (max-width: 640px) {
+      .glosario-grid { grid-template-columns: 1fr 1fr; }
+      .player-controls { gap: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">Cero Aporte<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Portada</a></li>
+    <li><a href="reportaje-epja.html">EPJA</a></li>
+    <li><a href="testimonios.html">Testimonios</a></li>
+    <li><a href="datos.html">Datos</a></li>
+    <li><a href="podcast.html" style="color:var(--white);">Podcast</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="rep-hero">
+  <div class="rep-hero-bg"></div>
+  <div class="rep-hero-inner container">
+    <span class="rep-hero-category">Audio · Podcast</span>
+    <h1 class="rep-hero-title">Cero Aporte<br><em>Podcast</em></h1>
+    <p class="rep-hero-deck">Episodio 1: "Nunca es tarde para el pupitre" — Debatimos con expertos académicos y autoridades locales sobre el futuro de la nivelación de estudios en Chile.</p>
+  </div>
+</section>
+
+<!-- CUERPO -->
+<main class="article-wrap">
+
+  <!-- PLAYER PRINCIPAL -->
+  <div class="player-card reveal">
+    <p class="player-ep">Episodio 1 — Trailer</p>
+    <p class="player-title">Nunca es tarde para el pupitre</p>
+    <p class="player-subtitle">Educación de Adultos: El Desafío · 4 min 32 seg</p>
+
+    <div class="player-controls">
+      <button class="player-btn" onclick="seekPct(-10)" title="Retroceder 10s">
+        <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8zm-1 11v-4l-1.5-1.5L8 12l3 4z"/><text x="7" y="15" font-size="6" fill="currentColor">10</text></svg>
+      </button>
+      <button class="player-btn player-btn-play" id="playBtn" onclick="togglePlay()">
+        <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="player-btn" onclick="seekPct(10)" title="Avanzar 10s">
+        <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg>
+      </button>
+      <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--greige);margin-left:0.5rem;" id="playerLabel">Trailer · 4:32</span>
+    </div>
+
+    <div class="player-progress-wrap">
+      <span class="player-time" id="currentTime">0:00</span>
+      <div class="player-bar" id="playerBar" onclick="seekClick(event)">
+        <div class="player-bar-fill" id="playerFill"></div>
+      </div>
+      <span class="player-time" id="totalTime">4:32</span>
+    </div>
+  </div>
+
+  <p class="reveal">En este primer episodio, debatimos con expertos académicos y autoridades locales sobre el futuro de la nivelación de estudios en Chile. Mientras escuchas, te invitamos a explorar nuestro glosario interactivo para entender mejor la terminología del sistema.</p>
+
+  <!-- LISTA DE EPISODIOS -->
+  <h2 class="reveal">Episodios</h2>
+
+  <div class="ep-list reveal">
+    <div class="ep-item" onclick="loadEp(0)">
+      <span class="ep-num">01</span>
+      <div class="ep-info">
+        <p class="ep-title">Nunca es tarde para el pupitre — Trailer</p>
+        <p class="ep-desc">Introducción a la serie. El Estado que no mira: la crisis del sistema EPJA en Chile.</p>
+      </div>
+      <span class="ep-dur">4:32</span>
+      <button class="ep-play-btn"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></button>
+    </div>
+    <div class="ep-item" onclick="loadEp(1)">
+      <span class="ep-num">02</span>
+      <div class="ep-info">
+        <p class="ep-title">El patito feo de la educación</p>
+        <p class="ep-desc">Directivos, docentes y el abandono sistemático del EPJA. Entrevista a Fabián Aguirre.</p>
+      </div>
+      <span class="ep-dur">18:45</span>
+      <button class="ep-play-btn"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></button>
+    </div>
+    <div class="ep-item" onclick="loadEp(2)">
+      <span class="ep-num">03</span>
+      <div class="ep-info">
+        <p class="ep-title">Volver a los cuadernos a los 47</p>
+        <p class="ep-desc">La historia de María Yesenia: enfermedad, maternidad y el regreso al aula que lo cambió todo.</p>
+      </div>
+      <span class="ep-dur">22:10</span>
+      <button class="ep-play-btn"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></button>
+    </div>
+    <div class="ep-item" onclick="loadEp(3)">
+      <span class="ep-num">04</span>
+      <div class="ep-info">
+        <p class="ep-title">El recorte que nadie vio</p>
+        <p class="ep-desc">Cómo el Fondo de Reactivación Educativa perdió el 41% de su presupuesto en tres años.</p>
+      </div>
+      <span class="ep-dur">15:55</span>
+      <button class="ep-play-btn"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></button>
+    </div>
+  </div>
+
+  <!-- GLOSARIO INTERACTIVO -->
+  <h2 class="reveal">Destaques interactivos: el glosario</h2>
+
+  <div class="reveal">
+    <p class="glosario-intro">★ Haz clic en los términos resaltados para descubrir su significado</p>
+
+    <p class="glosario-text">
+      La <span class="gterm" onclick="activarTermino('epja')">EPJA</span> requiere financiamiento directo. Actualmente, los colegios nocturnos sufren por la baja asistencia, lo que afecta la <span class="gterm" onclick="activarTermino('subvencion')">subvención escolar</span>. Además, es necesario revisar los programas de <span class="gterm" onclick="activarTermino('proretention')">Pro-Retención</span> para que sean acordes a la realidad laboral. La falta de acceso a la <span class="gterm" onclick="activarTermino('sep')">Ley SEP</span> agrava el problema, mientras el <span class="gterm" onclick="activarTermino('reactivacion')">Fondo de Reactivación</span> se reduce año a año.
+    </p>
+
+    <div class="glosario-panel" id="panel-epja">
+      <p class="glosario-panel-term">EPJA</p>
+      <p class="glosario-panel-def">Educación de Personas Jóvenes y Adultas. Modalidad educativa formal que permite completar la enseñanza básica o media a personas que no pudieron hacerlo en edad escolar. Se imparte en CEIA (Centros de Educación Integrada de Adultos) y en establecimientos con jornada vespertina o nocturna.</p>
+      <p class="glosario-panel-context">Ministerio de Educación · Chile · Decreto N° 584</p>
+    </div>
+    <div class="glosario-panel" id="panel-subvencion">
+      <p class="glosario-panel-term">Subvención escolar</p>
+      <p class="glosario-panel-def">Monto que el Estado transfiere a los establecimientos educacionales por cada alumno matriculado y con asistencia regular. Para el EPJA, esta es prácticamente la única fuente de financiamiento estatal. Si los alumnos no asisten, la subvención cae y la escuela pierde recursos.</p>
+      <p class="glosario-panel-context">DIPRES · Ley de Subvenciones · Chile</p>
+    </div>
+    <div class="glosario-panel" id="panel-proretention">
+      <p class="glosario-panel-term">Pro-Retención</p>
+      <p class="glosario-panel-def">Programa del Ministerio de Educación diseñado para apoyar la permanencia de estudiantes en riesgo de deserción. Entrega fondos para cubrir necesidades básicas. Sin embargo, su reglamento impide destinarlos a transporte, lo que lo hace inaplicable para estudiantes del EPJA que no pueden asistir por distancia o inseguridad.</p>
+      <p class="glosario-panel-context">MINEDUC · Programa Pro-Retención · 2022</p>
+    </div>
+    <div class="glosario-panel" id="panel-sep">
+      <p class="glosario-panel-term">Ley SEP</p>
+      <p class="glosario-panel-def">Subvención Escolar Preferencial. Beneficio adicional para establecimientos con alta concentración de alumnos vulnerables. Permite financiar mejoras en infraestructura, materiales y profesionales de apoyo (psicólogos, asistentes sociales). El EPJA está excluido de este beneficio porque sus establecimientos no pueden cumplir los requisitos del Plan de Mejoramiento Educativo.</p>
+      <p class="glosario-panel-context">Ley N° 20.248 · Chile · 2008</p>
+    </div>
+    <div class="glosario-panel" id="panel-reactivacion">
+      <p class="glosario-panel-term">Fondo de Reactivación Educativa</p>
+      <p class="glosario-panel-def">Creado en 2023 con $9.567 millones para recuperar estudiantes que abandonaron el sistema durante la pandemia. Ha sido recortado tres años consecutivos, llegando a $5.618 millones en 2026, una reducción del 41%. Es el único programa diseñado específicamente para combatir la deserción escolar post-COVID.</p>
+      <p class="glosario-panel-context">MINEDUC · Gobierno de Chile · 2023–2026</p>
+    </div>
+
+    <p style="font-family:var(--font-mono);font-size:0.65rem;color:var(--greige);margin-top:0.75rem;letter-spacing:0.08em;text-transform:uppercase;">O elige un término del glosario:</p>
+    <div class="glosario-grid">
+      <div class="glosario-chip" onclick="activarTermino('epja')">EPJA</div>
+      <div class="glosario-chip" onclick="activarTermino('subvencion')">Subvención</div>
+      <div class="glosario-chip" onclick="activarTermino('proretention')">Pro-Retención</div>
+      <div class="glosario-chip" onclick="activarTermino('sep')">Ley SEP</div>
+      <div class="glosario-chip" onclick="activarTermino('reactivacion')">Reactivación</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- CIERRE -->
+<div class="closing-strip">
+  <p>El problema es estructural. La solución también debe <em>serlo</em>.</p>
+  <a href="index.html" class="btn btn-red">← Volver a la portada</a>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Cero Aporte<span>.</span></div>
+      <p class="footer-copy">© 2026 Cero Aporte Mag · Escuela de Periodismo, UAC</p>
+    </div>
+    <nav class="footer-nav">
+      <a href="index.html">Portada</a>
+      <a href="reportaje-epja.html">EPJA</a>
+      <a href="testimonios.html">Testimonios</a>
+      <a href="datos.html">Datos</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+/* ---- PLAYER SIMULADO ---- */
+const episodes = [
+  { title: 'Nunca es tarde — Trailer', dur: 272 },
+  { title: 'El patito feo de la educación', dur: 1125 },
+  { title: 'Volver a los cuadernos a los 47', dur: 1330 },
+  { title: 'El recorte que nadie vio', dur: 955 },
+];
+let currentEp = 0;
+let currentSec = 0;
+let isPlaying = false;
+let interval = null;
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  const ss = String(Math.floor(s % 60)).padStart(2, '0');
+  return `${m}:${ss}`;
+}
+
+function updatePlayer() {
+  const ep = episodes[currentEp];
+  document.getElementById('currentTime').textContent = fmtTime(currentSec);
+  document.getElementById('totalTime').textContent = fmtTime(ep.dur);
+  document.getElementById('playerFill').style.width = ((currentSec / ep.dur) * 100) + '%';
+}
+
+function togglePlay() {
+  isPlaying = !isPlaying;
+  const icon = document.getElementById('playIcon');
+  if (isPlaying) {
+    icon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+    interval = setInterval(() => {
+      currentSec++;
+      if (currentSec >= episodes[currentEp].dur) {
+        currentSec = 0;
+        isPlaying = false;
+        icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+        clearInterval(interval);
+      }
+      updatePlayer();
+    }, 1000);
+  } else {
+    icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+    clearInterval(interval);
+  }
+}
+
+function seekPct(secs) {
+  currentSec = Math.max(0, Math.min(currentSec + secs, episodes[currentEp].dur));
+  updatePlayer();
+}
+
+function seekClick(e) {
+  const bar = document.getElementById('playerBar');
+  const rect = bar.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  currentSec = Math.round(pct * episodes[currentEp].dur);
+  updatePlayer();
+}
+
+function loadEp(idx) {
+  clearInterval(interval);
+  isPlaying = false;
+  currentEp = idx;
+  currentSec = 0;
+  document.getElementById('playIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+  document.getElementById('playerLabel').textContent = `Ep. ${idx + 1} · ${fmtTime(episodes[idx].dur)}`;
+  updatePlayer();
+  document.querySelector('.player-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+updatePlayer();
+
+/* ---- GLOSARIO ---- */
+function activarTermino(id) {
+  document.querySelectorAll('.glosario-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.gterm').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.glosario-chip').forEach(c => c.classList.remove('active'));
+
+  const panel = document.getElementById('panel-' + id);
+  if (panel) panel.classList.add('active');
+
+  document.querySelectorAll('.gterm').forEach(t => {
+    if (t.getAttribute('onclick') && t.getAttribute('onclick').includes(id)) {
+      t.classList.add('active');
+    }
+  });
+  document.querySelectorAll('.glosario-chip').forEach(c => {
+    if (c.getAttribute('onclick') && c.getAttribute('onclick').includes(id)) {
+      c.classList.add('active');
+    }
+  });
+}
+</script>
+</body>
+</html>

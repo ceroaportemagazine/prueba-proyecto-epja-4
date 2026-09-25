@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cero Aporte Mag</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ---- PORTADA HERO ---- */
+    .hero {
+      min-height: 100vh;
+      background: var(--black);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(26,24,23,0.55) 0%, rgba(26,24,23,0.92) 70%),
+        url('https://i.imgur.com/hhMjm9A.jpeg') center/cover no-repeat;
+    }
+    .hero-noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: var(--max-w);
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 5vw, 3rem);
+    }
+    .hero-edition {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .hero-edition::before {
+      content: '';
+      display: inline-block;
+      width: 2rem;
+      height: 1px;
+      background: var(--red);
+    }
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      line-height: 0.92;
+      color: var(--white);
+      margin-bottom: 2rem;
+      max-width: 16ch;
+    }
+    .hero-headline em {
+      font-style: normal;
+      color: var(--red);
+    }
+    .hero-deck {
+      font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+      color: var(--greige);
+      max-width: 55ch;
+      line-height: 1.65;
+      margin-bottom: 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* ---- BAJADA LIVE TICKER ---- */
+    .ticker-bar {
+      background: var(--red);
+      padding: 0.55rem 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .ticker-track {
+      display: inline-block;
+      animation: ticker 28s linear infinite;
+    }
+    .ticker-track span {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white);
+      padding: 0 2.5rem;
+    }
+    .ticker-track span::before {
+      content: '●';
+      margin-right: 0.75rem;
+      opacity: 0.6;
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ---- GRID EDICIONES ---- */
+    .ediciones { padding: 6rem 0 4rem; }
+    .ediciones-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .stories-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1.5px;
+      background: rgba(0,0,0,0.08);
+    }
+    .story-card {
+      position: relative;
+      overflow: hidden;
+      display: block;
+      background: var(--cream);
+      text-decoration: none;
+    }
+    .story-card:hover .story-img { transform: scale(1.04); }
+    .story-card:hover .story-title { color: var(--red); }
+    .story-img {
+      width: 100%;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      transition: transform 0.5s var(--ease-out);
+    }
+    .story-card.featured .story-img { aspect-ratio: 4/3; }
+    .story-body { padding: 1.5rem; }
+    .story-rubric {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.6rem;
+    }
+    .story-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2.5vw, 1.65rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--black);
+      transition: color 0.2s;
+      margin-bottom: 0.6rem;
+    }
+    .story-card:not(.featured) .story-title { font-size: 1rem; }
+    .story-excerpt {
+      font-size: 0.88rem;
+      color: #5a5a5a;
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .story-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--greige);
+      text-transform: uppercase;
+    }
+    .story-meta::before {
+      content: '';
+      display: inline-block;
+      width: 1.5rem;
+      height: 1px;
+      background: var(--greige);
+    }
+
+    /* Story card principal ocupa 2 rows */
+    .story-card.featured {
+      grid-row: 1 / 3;
+      grid-column: 1 / 2;
+    }
+
+    /* ---- STATS BAND ---- */
+    .stats-band {
+      background: var(--black);
+      color: var(--white);
+      padding: 4rem 0;
+    }
+    .stats-band .container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+    .stats-band .stat-block { background: var(--black); }
+    .stats-band .stat-number { color: var(--white); }
+    .stats-band .stat-label { color: var(--greige); }
+    .stats-band .stat-block + .stat-block {
+      border-left: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* ---- SOBRE EL MAG ---- */
+    .about-strip {
+      padding: 5rem 0;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .about-img-wrap { position: relative; }
+    .about-img-wrap img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+    .about-img-badge {
+      position: absolute;
+      bottom: -1.2rem;
+      right: -1.2rem;
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.9rem 1.2rem;
+    }
+    .about-text p {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #3a3a3a;
+      margin-bottom: 1.2rem;
+    }
+
+    @media (max-width: 900px) {
+      .stories-grid { grid-template-columns: 1fr; }
+      .story-card.featured { grid-row: auto; grid-column: auto; }
+      .about-inner { grid-template-columns: 1fr; }
+      .stats-band .container { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .about-text p {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        text-align: left;
+        hyphens: none;
+        -webkit-hyphens: none;
+      }
+      .about-inner { gap: 2rem; }
+      .about-strip { padding: 3rem clamp(1.5rem, 5vw, 3rem); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVEGACIÓN -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">Cero Aporte<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="reportaje-epja.html">EPJA</a></li>
+    <li><a href="testimonios.html">Testimonios</a></li>
+    <li><a href="datos.html">Datos</a></li>
+    <li><a href="podcast.html">Podcast</a></li>
+    <li><a href="index.html#sobre">Sobre el Mag</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-noise"></div>
+  <div class="hero-inner">
+    <p class="hero-edition">Edición agosto 2026 — Periodismo de investigación</p>
+    <h1 class="hero-headline">El Estado que <em>NO</em> mira</h1>
+    <p class="hero-deck">
+      Adultos que volvieron a las salas de clases enfrentan un sistema roto: sin psicólogos, sin transporte, sin textos y con presupuestos que se desploman año a año. Una investigación sobre la educación de jóvenes y adultos en Chile.
+    </p>
+    <div class="hero-actions">
+      <a href="reportaje-epja.html" class="btn btn-red">Leer reportaje principal →</a>
+      <a href="#ediciones" class="btn btn-ghost">Ver todas las notas</a>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-track">
+    <span>101.325 adultos matriculados en 2024</span>
+    <span>Caída de 18.000 estudiantes en 3 años</span>
+    <span>Recorte de 30% al Fondo de Reactivación Educativa</span>
+    <span>EPJA: el nivel más bajo de matrícula en 9 años</span>
+    <span>Sin psicólogos ni asistentes sociales en las escuelas nocturnas</span>
+    <span>101.325 adultos matriculados en 2024</span>
+    <span>Caída de 18.000 estudiantes en 3 años</span>
+    <span>Recorte de 30% al Fondo de Reactivación Educativa</span>
+    <span>EPJA: el nivel más bajo de matrícula en 9 años</span>
+    <span>Sin psicólogos ni asistentes sociales en las escuelas nocturnas</span>
+  </div>
+</div>
+
+<!-- GRID EDICIONES -->
+<section class="ediciones" id="ediciones">
+  <div class="container">
+    <div class="ediciones-header reveal">
+      <div>
+        <p class="eyebrow">Edición principal</p>
+        <h2 class="section-title">Reportajes</h2>
+        <div class="rule-red"></div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--greige);max-width:32ch;text-align:right;line-height:1.6;">
+        Periodismo de datos e investigación sobre las deudas del Estado con la educación de adultos en Chile.
+      </p>
+    </div>
+
+    <div class="stories-grid">
+      <!-- CARD PRINCIPAL -->
+      <a href="reportaje-epja.html" class="story-card featured reveal">
+        <img class="story-img" src="https://i.imgur.com/gxR5qHz.jpeg" alt="Estudiante adulta en sala de clases" />
+        <div class="story-body">
+          <p class="story-rubric">Educación · Investigación</p>
+          <h3 class="story-title">"Para el sistema nosotros no existimos"</h3>
+          <p class="story-excerpt">De ser una esperanza para miles, a convertirse en el "patito feo" de la educación: cómo el sistema EPJA perdió más de 18.000 estudiantes en tres años mientras el Estado recorta los únicos fondos diseñados para retenerlos.</p>
+          <div class="story-meta">Sebastián Acevedo, Romina Medina &amp; Miguel Pino — Agosto 2026</div>
+        </div>
+      </a>
+
+      <!-- CARD SECUNDARIA 1 -->
+      <a href="testimonios.html" class="story-card reveal">
+        <img class="story-img" src="https://i.imgur.com/hhMjm9A.jpeg" alt="María Yesenia Acuña" />
+        <div class="story-body">
+          <p class="story-rubric">Testimonio</p>
+          <h3 class="story-title">47 años y de vuelta a la sala: la historia de María Yesenia</h3>
+          <p class="story-excerpt">Una enfermedad sin diagnóstico la sacó del colegio en los '90. Décadas después, volvió y ahora piensa en la universidad.</p>
+          <div class="story-meta">Perfil — 5 min</div>
+        </div>
+      </a>
+
+      <!-- CARD SECUNDARIA 2 -->
+      <a href="reportaje-epja.html#presupuesto" class="story-card reveal">
+        <img class="story-img" src="https://i.imgur.com/wcBir1a.jpeg" alt="Escuela Alberto Hurtado" />
+        <div class="story-body">
+          <p class="story-rubric">Datos · Presupuesto</p>
+          <h3 class="story-title">El fondo de reactivación que encogió 30% en un año</h3>
+          <p class="story-excerpt">De $8.505 millones a $5.618 millones: el único programa diseñado para recuperar desertores escolares sufre su tercer recorte consecutivo.</p>
+          <div class="story-meta">Datos — 3 min</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<div class="stats-band">
+  <div class="container">
+    <div class="stat-block">
+      <span class="stat-number" data-target="101325">0</span>
+      <span class="stat-label">Adultos matriculados en EPJA (2024)</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-number" data-target="18" data-suffix="K">0</span>
+      <span class="stat-label">Estudiantes perdidos desde el peak de 2021</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-number" data-target="30" data-suffix="%">0</span>
+      <span class="stat-label">Recorte al Fondo de Reactivación Educativa 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- SOBRE EL MAG -->
+<section class="about-strip container" id="sobre">
+  <div class="about-inner">
+    <div class="about-img-wrap reveal">
+      <img src="https://i.imgur.com/vQ3bv6G.jpeg" alt="Sala de clases nocturna" />
+      <div class="about-img-badge">Periodismo<br>comprometido</div>
+    </div>
+    <div class="about-text reveal">
+      <p class="eyebrow">Sobre Cero Aporte Mag</p>
+      <h2 class="section-title" style="font-size:clamp(1.8rem,3.5vw,2.5rem);">Periodismo donde el Estado no llegó</h2>
+      <div class="rule-red"></div>
+      <p style="text-align:left;">
+        <strong>Cero Aporte Mag</strong> es una publicación periodística
+        digital de la Universidad Autónoma de Chile que
+        investiga las grietas del sistema público. Creemos
+        que contar lo invisible también es un acto político.
+      </p>
+      <p style="text-align:left;">
+        Esta edición surge de meses de trabajo de campo
+        en escuelas para adultos de la Región Metropolitana,
+        entrevistas con docentes, directivos, estudiantes
+        y organizaciones de la sociedad civil.
+      </p>
+      <a href="reportaje-epja.html" class="btn btn-dark" style="margin-top:1rem;">Leer el reportaje →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Cero Aporte<span>.</span></div>
+      <p class="footer-copy">© 2026 Cero Aporte Mag · Escuela de Periodismo, UAC · Todos los derechos reservados</p>
+    </div>
+    <nav class="footer-nav">
+      <a href="reportaje-epja.html">EPJA</a>
+      <a href="testimonios.html">Testimonios</a>
+      <a href="datos.html">Datos</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="index.html#sobre">Sobre</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

@@ -36,14 +36,14 @@ function initTimeline() {
 
 /* ---- ANIMATED COUNTERS ---- */
 function initCounters() {
-  const nums = document.querySelectorAll('.stat-number[data-target]');
+  const nums = document.querySelectorAll('.stat-number[data-target], [data-count]');
   if (!nums.length) return;
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
       obs.unobserve(e.target);
       const el = e.target;
-      const target = +el.dataset.target;
+    const target = +(el.dataset.target || el.dataset.count);
       const suffix = el.dataset.suffix || '';
       const prefix = el.dataset.prefix || '';
       const duration = 1400;
@@ -68,7 +68,7 @@ function initProgressBars() {
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
-        e.target.style.width = e.target.dataset.width + '%';
+      e.target.style.width = parseFloat(e.target.dataset.width) + '%';
         obs.unobserve(e.target);
       }
     });

@@ -362,7 +362,19 @@
       font-family: var(--font-mono);
       letter-spacing: 0.06em;
     }
-
+    /* Evita que ".reportaje-body p" oscurezca el texto sobre fondo azul */
+    .reportaje-body .wordplay-title {
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      line-height: 1.2;
+      color: var(--white);
+      margin-bottom: 0;
+    }
+    .reportaje-body .wordplay-sub {
+      font-size: 0.75rem;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.65);
+      margin: 1rem 0 0;
+    }
     /* ---- BUDGET PROGRESS ---- */
     .budget-section { margin: 3rem 0; }
     .budget-item { margin-bottom: 2rem; }

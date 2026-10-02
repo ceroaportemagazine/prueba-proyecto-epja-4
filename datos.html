@@ -229,21 +229,20 @@
     }
 
     /* ---- STAT CARDS DATOS ---- */
+       /* ---- STAT CARDS DATOS ---- */
     .data-stats {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
       margin: 3rem 0;
-      border: 2px solid var(--black);
     }
     .data-stat {
       background: var(--white);
-      padding: 2.5rem 1.5rem 2rem;
+      padding: 2.5rem 1rem 2rem;
       text-align: center;
       position: relative;
-      border-right: 2px solid var(--black);
+      container-type: inline-size;
     }
-    .data-stat:last-child { border-right: none; }
     .data-stat::before {
       content: '';
       display: block;
@@ -255,7 +254,8 @@
     }
     .data-stat-num {
       font-family: var(--font-display);
-      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-size: clamp(1.3rem, 11.5cqi, 3rem);
+      white-space: nowrap;
       font-weight: 800;
       letter-spacing: -0.05em;
       color: var(--black);

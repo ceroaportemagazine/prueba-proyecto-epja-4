@@ -199,7 +199,29 @@
       text-align: center;
       line-height: 1.5;
     }
-
+    /* Evita que ".reportaje-body p" desarme las tarjetas */
+    .reportaje-body .flip-card p { margin: 0; }
+    .reportaje-body .flip-label {
+      font-size: 0.95rem;
+      line-height: 1.25;
+      color: var(--black);
+    }
+    .reportaje-body .flip-hint {
+      font-size: 0.6rem;
+      line-height: 1.4;
+      color: var(--greige);
+      margin-top: 0.5rem;
+    }
+    .reportaje-body .flip-back-text {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--white);
+    }
+    .flip-card-front,
+    .flip-card-back {
+      align-items: center;
+      overflow: hidden;
+    }
     /* ---- CHART SECTION ---- */
     .chart-section {
       background: var(--black);

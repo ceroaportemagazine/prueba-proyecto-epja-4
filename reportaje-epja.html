@@ -410,6 +410,44 @@
       margin: 3rem 0;
     }
 
+      /* ---- GRÁFICO MATRÍCULA (barras verticales) ---- */
+    .reportaje-body .chart-section p { margin-bottom: 0.4rem; line-height: 1.4; }
+    .reportaje-body .chart-title { font-size: 1.3rem; color: var(--white); }
+    .reportaje-body .chart-subtitle { font-size: 0.68rem; text-transform: none; color: rgba(255,255,255,0.65); }
+    .reportaje-body .chart-hint {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .canvas-wrap { position: relative; }
+    #matriculaChart {
+      display: block;
+      width: 100%;
+      height: 280px;
+      cursor: crosshair;
+      touch-action: pan-y;
+    }
+    .chart-tooltip {
+      position: absolute;
+      display: none;
+      transform: translate(-50%, -100%);
+      background: var(--white);
+      color: var(--black);
+      padding: 0.6rem 0.9rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+      white-space: nowrap;
+      pointer-events: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      z-index: 10;
+    }
+    .chart-tooltip .up   { color: #2a7d4f; }
+    .chart-tooltip .down { color: #c0392b; }
+
     /* ---- RESPONSIVE ---- */
     @media (max-width: 900px) {
       .stat-cards { grid-template-columns: 1fr; }
@@ -418,6 +456,7 @@
     @media (max-width: 640px) {
       .causes-grid { grid-template-columns: 1fr; }
       .bar-row { grid-template-columns: 3rem 1fr 4rem; }
+      .chart-section { padding: 2rem 1rem; }
     }
   </style>
 </head>
@@ -594,7 +633,6 @@
       <span class="bar-legend-item"><span class="legend-swatch" style="background:#9e2b1a;"></span>Año crítico</span>
     </div>
   </div>
-
   <!-- WORDPLAY SECTION -->
   <div class="wordplay-section reveal">
     <p class="wordplay-title">
@@ -813,6 +851,158 @@
     }, { threshold: 0.2 });
     fills.forEach(f => obs.observe(f));
   })();
+</script>
+  <script>
+/* ---- GRÁFICO MATRÍCULA: barras verticales interactivas ---- */
+(function () {
+  // Datos en miles de estudiantes. "critico: true" pinta la barra en rojo oscuro.
+  const datos = [
+    { year: '2016', val: 123.4 },
+    { year: '2017', val: 120.1 },
+    { year: '2018', val: 117.3 },
+    { year: '2019', val: 118.9 },
+    { year: '2020', val: 90.2,  critico: true },
+    { year: '2021', val: 119.8 },
+    { year: '2022', val: 113.2 },
+    { year: '2023', val: 107.4 },
+    { year: '2024', val: 101.3, critico: true },
+  ];
+  const MIN = 80, MAX = 130, PASO = 10;   // escala del eje vertical (en miles)
+
+  const canvas  = document.getElementById('matriculaChart');
+  const tooltip = document.getElementById('chartTooltip');
+  if (!canvas) return;
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const num = (n, d = 1) => n.toLocaleString('es-CL', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const vals = datos.map(d => d.val);
+  const iMax = vals.indexOf(Math.max(...vals));
+  const iMin = vals.indexOf(Math.min(...vals));
+  let rects = [], hover = -1, growth = reduce ? 1 : 0;
+
+  function draw() {
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.clientWidth, H = canvas.clientHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+
+    const pad = { top: 24, right: 8, bottom: 32, left: 40 };
+    const cW = W - pad.left - pad.right, cH = H - pad.top - pad.bottom;
+    const slot = cW / datos.length, barW = slot * 0.55;
+    const yOf = v => pad.top + cH - ((v - MIN) / (MAX - MIN)) * cH;
+    const ease = 1 - Math.pow(1 - growth, 3);
+
+    ctx.font = '9px "DM Mono", monospace';
+    for (let v = MIN; v <= MAX; v += PASO) {
+      const y = yOf(v);
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.75)';
+      ctx.textAlign = 'right';
+      ctx.fillText(v + 'K', pad.left - 6, y + 3);
+    }
+
+    if (hover > -1) {
+      ctx.fillStyle = 'rgba(255,255,255,0.05)';
+      ctx.fillRect(pad.left + hover * slot, pad.top, slot, cH);
+    }
+
+    rects = [];
+    datos.forEach((d, i) => {
+      const x = pad.left + i * slot + (slot - barW) / 2;
+      const fullH = ((d.val - MIN) / (MAX - MIN)) * cH;
+      const h = fullH * ease;
+      ctx.globalAlpha = hover > -1 && hover !== i ? 0.35 : 1;
+      ctx.fillStyle = d.critico ? '#9e2b1a' : '#FF3F20';
+      ctx.fillRect(x, pad.top + cH - h, barW, h);
+      ctx.globalAlpha = 1;
+
+      ctx.fillStyle = hover === i ? '#fff' : 'rgba(255,255,255,0.75)';
+      ctx.font = '9px "DM Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(slot < 36 ? "'" + d.year.slice(2) : d.year, x + barW / 2, H - pad.bottom + 16);
+
+      if (growth >= 1 && (i === iMax || i === iMin)) {
+        ctx.fillStyle = i === iMax ? '#ff7a62' : '#e0573f';
+        ctx.font = 'bold 8px "DM Mono", monospace';
+        ctx.fillText(i === iMax ? '▲ MÁX' : '▼ MÍN', x + barW / 2, pad.top + cH - fullH - 6);
+      }
+      rects.push({ slotX: pad.left + i * slot, slotW: slot, cx: x + barW / 2, top: pad.top + cH - fullH });
+    });
+
+    if (hover > -1) {
+      const y = yOf(datos[hover].val);
+      ctx.save();
+      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+      ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  function show(i) {
+    const d = datos[i], r = rects[i];
+    let html = `<strong>${d.year}</strong><br>${num(d.val)} mil estudiantes`;
+    if (i > 0) {
+      const prev = datos[i - 1].val, diff = d.val - prev;
+      const signo = diff >= 0 ? '+' : '−';
+      html += `<br><span class="${diff >= 0 ? 'up' : 'down'}">${diff >= 0 ? '▲' : '▼'} ${signo}${num(Math.abs(diff))} mil (${signo}${num(Math.abs(diff / prev * 100))}%) vs ${datos[i - 1].year}</span>`;
+    }
+    tooltip.innerHTML = html;
+    tooltip.style.display = 'block';
+    const half = tooltip.offsetWidth / 2;
+    tooltip.style.left = Math.min(Math.max(r.cx, half), canvas.clientWidth - half) + 'px';
+    tooltip.style.top  = Math.max(r.top - 8, tooltip.offsetHeight) + 'px';
+  }
+  function hide() {
+    tooltip.style.display = 'none';
+    if (hover !== -1) { hover = -1; draw(); }
+  }
+  function pick(e) {
+    if (growth < 1) return;
+    const mx = e.clientX - canvas.getBoundingClientRect().left;
+    const i = rects.findIndex(r => mx >= r.slotX && mx < r.slotX + r.slotW);
+    if (i < 0) return hide();
+    if (i !== hover) { hover = i; draw(); }
+    show(i);
+  }
+
+  canvas.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') pick(e); });
+  canvas.addEventListener('pointerdown', pick);
+  canvas.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') hide(); });
+  document.addEventListener('pointerdown', e => { if (e.target !== canvas) hide(); });
+
+  canvas.tabIndex = 0;
+  canvas.setAttribute('role', 'img');
+  canvas.setAttribute('aria-label', 'Gráfico de barras de la matrícula EPJA entre 2016 y 2024. Usa las flechas para recorrer los años.');
+  canvas.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    e.preventDefault();
+    hover = hover < 0 ? 0 : Math.min(Math.max(hover + (e.key === 'ArrowRight' ? 1 : -1), 0), datos.length - 1);
+    draw(); show(hover);
+  });
+  canvas.addEventListener('blur', hide);
+
+  const obs = new IntersectionObserver(entries => {
+    if (!entries[0].isIntersecting) return;
+    obs.disconnect();
+    if (reduce) return draw();
+    let t0 = null;
+    (function step(ts) {
+      if (!t0) t0 = ts;
+      growth = Math.min((ts - t0) / 1100, 1);
+      draw();
+      if (growth < 1) requestAnimationFrame(step);
+    })(performance.now());
+  }, { threshold: 0.35 });
+  obs.observe(canvas);
+
+  draw();
+  window.addEventListener('resize', () => { tooltip.style.display = 'none'; draw(); });
+  if (document.fonts) document.fonts.ready.then(draw);
+})();
 </script>
 </body>
 </html>

@@ -281,6 +281,31 @@
       .maria-intro { grid-template-columns: 1fr; gap: 1.5rem; }
       .maria-foto img { aspect-ratio: 4 / 3; }
     }
+        /* ---- OTROS COLEGIOS: ESTUDIANTES Y VIDEO ---- */
+    .article-wrap .escuela-titulo.nuevo-colegio { margin-top: 4rem; }
+    .estudiante-intro { margin-bottom: 2.5rem; }
+    .video-testimonio { margin: 0.5rem 0 3rem; }
+    .article-wrap .video-titulo {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--black);
+      margin-bottom: 1rem;
+    }
+    .video-wrap {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: var(--black);
+    }
+    .video-wrap iframe,
+    .video-wrap video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
     /* ---- VOCES: TARJETAS DE TESTIMONIO ---- */
     .voces-grid {
       display: grid;
@@ -556,7 +581,40 @@
     <blockquote>"Esto me ha generado tener más personalidad. Antes era como vergonzosa. Esto mismo que estoy haciendo ahora yo no me atrevía — y ahora ya estoy diciendo que sí."</blockquote>
     <cite>María Yesenia Acuña — Estudiante, 47 años</cite>
   </div>
+  <!-- ============ INSTITUTO NUEVO BILBAO ============ -->
+  <h2 class="reveal escuela-titulo nuevo-colegio" id="nuevo-bilbao">Instituto Nuevo Bilbao</h2>
 
+  <!-- ESTUDIANTE: SANTIAGO ESCOBAR -->
+  <div class="maria-intro estudiante-intro reveal">
+    <figure class="maria-foto">
+      <img src="https://i.imgur.com/7t1hqqR.jpeg" alt="Santiago Escobar, estudiante del Instituto Nuevo Bilbao" />
+      <figcaption><strong>Santiago Escobar</strong>25 años · Cursa tercero y cuarto medio</figcaption>
+    </figure>
+    <div class="maria-texto">
+      <p>Santiago llevaba años sin pisar una sala de clases, desde antes de la pandemia. Él mismo habla de un tiempo "desviado, tomando malas decisiones". A comienzos de este año llegó al Instituto Nuevo Bilbao para cerrar un ciclo pendiente: terminar el colegio, por él y por su familia.</p>
+      <p>Hoy cursa tercero y cuarto medio en un mismo año y dice que, por primera vez en mucho tiempo, no se siente juzgado. Sueña con estudiar técnico en sonido: "La música me ayuda mucho a realizarme como persona".</p>
+    </div>
+  </div>
+
+  <!-- ESTUDIANTE: JOSEFA MOLINA -->
+  <div class="maria-intro estudiante-intro reveal">
+    <figure class="maria-foto">
+      <img src="https://i.imgur.com/rAcioLq.jpeg" alt="Josefa Molina, estudiante del Instituto Nuevo Bilbao" />
+      <figcaption><strong>Josefa Molina</strong>18 años · Cursa cuarto medio</figcaption>
+    </figure>
+    <div class="maria-texto">
+      <p>Josefa llegó una semana antes de que terminara el primer semestre. Venía de un colegio grande y de alta exigencia académica, donde, según cuenta, "no importaba cómo te sentías". El primer día le dijeron que saldría del instituto "mirando hacia adelante y no mirando el piso", como había llegado.</p>
+      <p>Quiere ser actriz y estudiar teatro en la Universidad Católica. En su colegio anterior un profesor le advirtió: "Te vas a morir de hambre". Aquí, en cambio, la ayudaron a inscribirse en la prueba especial de teatro.</p>
+    </div>
+  </div>
+
+  <!-- VIDEO ENTREVISTA -->
+  <div class="video-testimonio reveal">
+    <p class="video-titulo">Revisa el testimonio completo aquí</p>
+    <div class="video-wrap">
+      <iframe src="AQUÍ_LINK_DEL_VIDEO" title="Entrevista a estudiantes del Instituto Nuevo Bilbao" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
 </main>
 
 <!-- CIERRE -->

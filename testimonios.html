@@ -240,6 +240,43 @@
       line-height: 1.7;
       color: rgba(255,255,255,0.8);
     }
+        /* ---- INTRO CON FOTO DE MARÍA ---- */
+    .maria-intro {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      gap: 2rem;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+    .maria-foto { margin: 0; }
+    .maria-foto img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      object-position: center 30%;
+    }
+    .maria-foto figcaption {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      line-height: 1.5;
+      color: #5a5a5a;
+      margin-top: 0.6rem;
+      padding-top: 0.6rem;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    .maria-foto figcaption strong {
+      display: block;
+      color: var(--red);
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    .article-wrap .maria-texto p:last-child { margin-bottom: 0; }
+
+    @media (max-width: 640px) {
+      .maria-intro { grid-template-columns: 1fr; gap: 1.5rem; }
+      .maria-foto img { aspect-ratio: 4 / 3; }
+    }
     /* ---- VOCES: TARJETAS DE TESTIMONIO ---- */
     .voces-grid {
       display: grid;

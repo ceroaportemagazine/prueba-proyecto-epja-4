@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFlipCards();
   initWordHighlight();
   initNavScroll();
+    initMobileMenu();
 });
 
 /* ---- REVEAL ON SCROLL ---- */
@@ -129,4 +130,33 @@ function initNavScroll() {
       ? 'rgba(26,24,23,0.99)'
       : 'rgba(26,24,23,0.96)';
   }, { passive: true });
+}
+
+/* ---- MENÚ EN CELULAR (botón hamburguesa) ---- */
+function initMobileMenu() {
+  const nav = document.querySelector('.nav');
+  const links = nav && nav.querySelector('.nav-links');
+  if (!links) return;
+
+  const iconOpen  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+  const iconClose = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'nav-toggle';
+  btn.setAttribute('aria-label', 'Abrir menú');
+  btn.setAttribute('aria-expanded', 'false');
+  btn.innerHTML = iconOpen;
+  nav.appendChild(btn);
+
+  function setOpen(open) {
+    nav.classList.toggle('menu-open', open);
+    btn.setAttribute('aria-expanded', open);
+    btn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    btn.innerHTML = open ? iconClose : iconOpen;
+  }
+
+  btn.addEventListener('click', () => setOpen(!nav.classList.contains('menu-open')));
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
 }

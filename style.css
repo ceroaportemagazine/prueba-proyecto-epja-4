@@ -459,3 +459,57 @@ a { color: inherit; text-decoration: none; }
 .escuela-titulo { scroll-margin-top: 6rem; }
 /* Página actual en el menú */
 .nav-links a[aria-current="page"] { color: var(--white); }
+
+/* ---- MENÚ EN CELULAR (botón hamburguesa) ---- */
+.nav-toggle { display: none; }
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: -0.6rem;
+    background: none;
+    border: 0;
+    color: var(--white);
+    cursor: pointer;
+  }
+  .nav-toggle svg { width: 1.5rem; height: 1.5rem; }
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    background: rgba(26,24,23,0.99);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 0.5rem 0 1rem;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+  }
+  .nav.menu-open .nav-links { display: flex; }
+  .nav-links > li > a {
+    display: block;
+    padding: 0.9rem clamp(1.5rem, 5vw, 3rem);
+    font-size: 0.9rem;
+  }
+  .nav-dropdown > a::after { content: none; }
+  .nav-submenu {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    min-width: 0;
+    background: none;
+    border-top: 0;
+    padding: 0 0 0.4rem;
+  }
+  .nav-submenu::before { display: none; }
+  .nav-submenu a {
+    padding: 0.55rem clamp(1.5rem, 5vw, 3rem) 0.55rem calc(clamp(1.5rem, 5vw, 3rem) + 1rem);
+    font-size: 0.85rem;
+  }
+}
